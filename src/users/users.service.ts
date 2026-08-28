@@ -51,6 +51,13 @@ export class UsersService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} user`;
+    const user = this.users.find((user) => user.id === id);
+
+    if (!user) {
+      return 'User not found';
+    }
+
+    const userUpdatedIndex = this.users.indexOf(user);
+    this.users.splice(userUpdatedIndex, 1);
   }
 }
