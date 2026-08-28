@@ -33,7 +33,21 @@ export class UsersService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    const user = this.users.find((user) => user.id === id);
+
+    if (!user) {
+      return 'User not found';
+    }
+
+    const userUpdated: User = {
+      ...user,
+      ...updateUserDto,
+    };
+
+    const userUpdatedIndex = this.users.indexOf(user);
+    this.users[userUpdatedIndex] = userUpdated;
+
+    return userUpdated;
   }
 
   remove(id: number) {
