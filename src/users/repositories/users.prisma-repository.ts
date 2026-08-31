@@ -5,6 +5,7 @@ import { UsersRepository } from './users.repository';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '../../generated/prisma/client';
 import { EntityAlreadyExistsError } from '../../errors/entity-already-exists.error';
+import { EntityNotFoundError } from '../../errors/entity-not-found.error';
 
 @Injectable()
 export class UsersPrismaRepository implements UsersRepository {
@@ -33,5 +34,15 @@ export class UsersPrismaRepository implements UsersRepository {
     const users = this.prisma.user.findMany();
 
     return users;
+  }
+
+  async findById(id: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new EntityNotFoundError(`User with id '${id}' was not found.`);
+    }
+
+    return user;
   }
 }

@@ -7,29 +7,25 @@ import { UsersRepository } from './repositories/users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   create(createUserDto: CreateUserDto) {
-    const newUser = this.userRepository.create(createUserDto);
+    const newUser = this.usersRepository.create(createUserDto);
 
     return newUser;
   }
 
   findAll() {
-    const users = this.userRepository.findAll();
+    const users = this.usersRepository.findAll();
 
     return users;
   }
 
-  // findOne(id: number) {
-  //   const user = this.users.find((user) => user.id === id);
+  findOne(id: string) {
+    const user = this.usersRepository.findById(id);
 
-  //   if (!user) {
-  //     throw new EntityNotFoundError(`User with id #${id} was not found.`);
-  //   }
-
-  //   return user;
-  // }
+    return user;
+  }
 
   // update(id: number, updateUserDto: UpdateUserDto) {
   //   const user = this.users.find((user) => user.id === id);
