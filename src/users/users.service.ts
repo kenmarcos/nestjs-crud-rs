@@ -3,9 +3,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { EntityNotFoundError } from '../errors/entity-not-found.error';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly prisma: PrismaService) {}
+
   private users: User[] = [
     { id: 1, name: 'John Doe', email: 'johndoe@gmail.com' },
   ];
@@ -26,7 +29,9 @@ export class UsersService {
   }
 
   findAll() {
-    return this.users;
+    const users = this.prisma.user.findMany();
+
+    return users;
   }
 
   findOne(id: number) {
