@@ -1,13 +1,7 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Prisma } from '../../generated/prisma/client';
 
-export class User {
-  id!: number;
-
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
-
-  @IsEmail()
-  @IsOptional()
-  email?: string;
+export class User implements Prisma.UserUncheckedCreateInput {
+  id?: string | undefined;
+  email!: string;
+  name?: string | null | undefined;
 }

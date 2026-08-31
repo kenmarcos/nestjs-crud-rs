@@ -3,73 +3,73 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { EntityNotFoundError } from '../errors/entity-not-found.error';
-import { PrismaService } from '../prisma/prisma.service';
+import { UserRepository } from './repositories/users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
-  private users: User[] = [
-    { id: 1, name: 'John Doe', email: 'johndoe@gmail.com' },
-  ];
+  // private users: User[] = [
+  //   { id: 1, name: 'John Doe', email: 'johndoe@gmail.com' },
+  // ];
 
-  create(createUserDto: CreateUserDto) {
-    const currentMaxId = this.users[this.users.length - 1]?.id ?? 0;
+  // create(createUserDto: CreateUserDto) {
+  //   const currentMaxId = this.users[this.users.length - 1]?.id ?? 0;
 
-    const id = currentMaxId + 1;
+  //   const id = currentMaxId + 1;
 
-    const user: User = {
-      id,
-      ...createUserDto,
-    };
+  //   const user: User = {
+  //     id,
+  //     ...createUserDto,
+  //   };
 
-    this.users.push(user);
+  //   this.users.push(user);
 
-    return user;
-  }
+  //   return user;
+  // }
 
   findAll() {
-    const users = this.prisma.user.findMany();
+    const users = this.userRepository.findAll();
 
     return users;
   }
 
-  findOne(id: number) {
-    const user = this.users.find((user) => user.id === id);
+  // findOne(id: number) {
+  //   const user = this.users.find((user) => user.id === id);
 
-    if (!user) {
-      throw new EntityNotFoundError(`User with id #${id} was not found.`);
-    }
+  //   if (!user) {
+  //     throw new EntityNotFoundError(`User with id #${id} was not found.`);
+  //   }
 
-    return user;
-  }
+  //   return user;
+  // }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    const user = this.users.find((user) => user.id === id);
+  // update(id: number, updateUserDto: UpdateUserDto) {
+  //   const user = this.users.find((user) => user.id === id);
 
-    if (!user) {
-      throw new EntityNotFoundError(`User with id #${id} was not found.`);
-    }
+  //   if (!user) {
+  //     throw new EntityNotFoundError(`User with id #${id} was not found.`);
+  //   }
 
-    const userUpdated: User = {
-      ...user,
-      ...updateUserDto,
-    };
+  //   const userUpdated: User = {
+  //     ...user,
+  //     ...updateUserDto,
+  //   };
 
-    const userUpdatedIndex = this.users.indexOf(user);
-    this.users[userUpdatedIndex] = userUpdated;
+  //   const userUpdatedIndex = this.users.indexOf(user);
+  //   this.users[userUpdatedIndex] = userUpdated;
 
-    return userUpdated;
-  }
+  //   return userUpdated;
+  // }
 
-  remove(id: number) {
-    const user = this.users.find((user) => user.id === id);
+  // remove(id: number) {
+  //   const user = this.users.find((user) => user.id === id);
 
-    if (!user) {
-      throw new EntityNotFoundError(`User with id #${id} was not found.`);
-    }
+  //   if (!user) {
+  //     throw new EntityNotFoundError(`User with id #${id} was not found.`);
+  //   }
 
-    const userUpdatedIndex = this.users.indexOf(user);
-    this.users.splice(userUpdatedIndex, 1);
-  }
+  //   const userUpdatedIndex = this.users.indexOf(user);
+  //   this.users.splice(userUpdatedIndex, 1);
+  // }
 }
