@@ -27,23 +27,11 @@ export class UsersService {
     return user;
   }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   const user = this.users.find((user) => user.id === id);
+  update(id: string, updateUserDto: UpdateUserDto) {
+    const userUpdated = this.usersRepository.update(id, updateUserDto);
 
-  //   if (!user) {
-  //     throw new EntityNotFoundError(`User with id #${id} was not found.`);
-  //   }
-
-  //   const userUpdated: User = {
-  //     ...user,
-  //     ...updateUserDto,
-  //   };
-
-  //   const userUpdatedIndex = this.users.indexOf(user);
-  //   this.users[userUpdatedIndex] = userUpdated;
-
-  //   return userUpdated;
-  // }
+    return userUpdated;
+  }
 
   // remove(id: number) {
   //   const user = this.users.find((user) => user.id === id);

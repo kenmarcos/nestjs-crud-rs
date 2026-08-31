@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from './../dto/update-user.dto';
 import { User } from '../entities/user.entity';
 import { UsersRepository } from './users.repository';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '../../generated/prisma/client';
 import { EntityAlreadyExistsError } from '../../errors/entity-already-exists.error';
 import { EntityNotFoundError } from '../../errors/entity-not-found.error';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 
 @Injectable()
 export class UsersPrismaRepository implements UsersRepository {
@@ -44,5 +46,25 @@ export class UsersPrismaRepository implements UsersRepository {
     }
 
     return user;
+  }
+
+  async update(id: string, data: UpdateUserDto): Promise<User> {
+    try {
+      const userUpdated = await this.prisma.user.update({
+        where: { id },
+        data,
+      });
+
+      return userUpdated;
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotFoundError(`User with id '${id}' was not found.`);
+      }
+
+      throw error;
+    }
   }
 }
