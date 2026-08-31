@@ -50,12 +50,27 @@ export class UsersPrismaRepository implements UsersRepository {
 
   async update(id: string, data: UpdateUserDto): Promise<User> {
     try {
-      const userUpdated = await this.prisma.user.update({
+      const updatedUser = await this.prisma.user.update({
         where: { id },
         data,
       });
 
-      return userUpdated;
+      return updatedUser;
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotFoundError(`User with id '${id}' was not found.`);
+      }
+
+      throw error;
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    try {
+      await this.prisma.user.delete({ where: { id } });
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&

@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
-import { EntityNotFoundError } from '../errors/entity-not-found.error';
 import { UsersRepository } from './repositories/users.repository';
 
 @Injectable()
@@ -28,19 +26,12 @@ export class UsersService {
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
-    const userUpdated = this.usersRepository.update(id, updateUserDto);
+    const updatedUser = this.usersRepository.update(id, updateUserDto);
 
-    return userUpdated;
+    return updatedUser;
   }
 
-  // remove(id: number) {
-  //   const user = this.users.find((user) => user.id === id);
-
-  //   if (!user) {
-  //     throw new EntityNotFoundError(`User with id #${id} was not found.`);
-  //   }
-
-  //   const userUpdatedIndex = this.users.indexOf(user);
-  //   this.users.splice(userUpdatedIndex, 1);
-  // }
+  remove(id: string) {
+    return this.usersRepository.delete(id);
+  }
 }
