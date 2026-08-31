@@ -3,30 +3,17 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { EntityNotFoundError } from '../errors/entity-not-found.error';
-import { UserRepository } from './repositories/users.repository';
+import { UsersRepository } from './repositories/users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UsersRepository) {}
 
-  // private users: User[] = [
-  //   { id: 1, name: 'John Doe', email: 'johndoe@gmail.com' },
-  // ];
+  create(createUserDto: CreateUserDto) {
+    const newUser = this.userRepository.create(createUserDto);
 
-  // create(createUserDto: CreateUserDto) {
-  //   const currentMaxId = this.users[this.users.length - 1]?.id ?? 0;
-
-  //   const id = currentMaxId + 1;
-
-  //   const user: User = {
-  //     id,
-  //     ...createUserDto,
-  //   };
-
-  //   this.users.push(user);
-
-  //   return user;
-  // }
+    return newUser;
+  }
 
   findAll() {
     const users = this.userRepository.findAll();

@@ -1,0 +1,37 @@
+import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { User } from '../entities/user.entity';
+import { UsersRepository } from './users.repository';
+import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma } from '../../generated/prisma/client';
+import { EntityAlreadyExistsError } from '../../errors/entity-already-exists.error';
+
+@Injectable()
+export class UsersPrismaRepository implements UsersRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(data: CreateUserDto): Promise<User> {
+    try {
+      const newUser = await this.prisma.user.create({ data });
+
+      return newUser;
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new EntityAlreadyExistsError(
+          `User with e-mail '${data.email}' already exists.`,
+        );
+      }
+
+      throw error;
+    }
+  }
+
+  findAll(): Promise<User[]> {
+    const users = this.prisma.user.findMany();
+
+    return users;
+  }
+}

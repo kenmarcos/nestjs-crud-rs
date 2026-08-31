@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { EntityNotFoundInterceptor } from './interceptors/entity-not-found.interceptor';
+import { DomainErrorFilter } from './filters/domain-error.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,8 +16,8 @@ async function bootstrap() {
     }),
   );
 
-  // Interceptors
-  app.useGlobalInterceptors(new EntityNotFoundInterceptor());
+  // Filters
+  app.useGlobalFilters(new DomainErrorFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }
