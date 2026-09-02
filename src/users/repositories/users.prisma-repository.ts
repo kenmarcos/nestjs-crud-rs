@@ -8,6 +8,7 @@ import { Prisma } from '../../generated/prisma/client';
 import { EntityAlreadyExistsError } from '../../errors/entity-already-exists.error';
 import { EntityNotFoundError } from '../../errors/entity-not-found.error';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersPrismaRepository implements UsersRepository {
@@ -15,7 +16,12 @@ export class UsersPrismaRepository implements UsersRepository {
 
   async create(data: CreateUserDto): Promise<User> {
     try {
-      const newUser = await this.prisma.user.create({ data });
+      const newUser = await this.prisma.user.create({
+        data: {
+          ...data,
+          password: await bcrypt.hash(data.password, 10),
+        },
+      });
 
       return newUser;
     } catch (error) {
