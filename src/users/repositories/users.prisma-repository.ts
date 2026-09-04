@@ -44,14 +44,10 @@ export class UsersPrismaRepository implements UsersRepository {
     return users.map((user) => new User(user));
   }
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
-    if (!user) {
-      throw new EntityNotFoundError(`User with id '${id}' was not found.`);
-    }
-
-    return new User(user);
+    return user;
   }
 
   async findByEmail(email: string): Promise<User | null> {
