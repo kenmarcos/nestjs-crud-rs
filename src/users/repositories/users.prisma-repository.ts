@@ -23,7 +23,7 @@ export class UsersPrismaRepository implements UsersRepository {
         },
       });
 
-      return newUser;
+      return new User(newUser);
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -38,10 +38,10 @@ export class UsersPrismaRepository implements UsersRepository {
     }
   }
 
-  findAll(): Promise<User[]> {
-    const users = this.prisma.user.findMany();
+  async findAll(): Promise<User[]> {
+    const users = await this.prisma.user.findMany();
 
-    return users;
+    return users.map((user) => new User(user));
   }
 
   async findById(id: string): Promise<User> {
@@ -51,7 +51,7 @@ export class UsersPrismaRepository implements UsersRepository {
       throw new EntityNotFoundError(`User with id '${id}' was not found.`);
     }
 
-    return user;
+    return new User(user);
   }
 
   async update(id: string, data: UpdateUserDto): Promise<User> {
@@ -61,7 +61,7 @@ export class UsersPrismaRepository implements UsersRepository {
         data,
       });
 
-      return updatedUser;
+      return new User(updatedUser);
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
