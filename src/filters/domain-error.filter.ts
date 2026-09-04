@@ -5,12 +5,20 @@ import {
   ExceptionFilter,
   HttpException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { EntityNotFoundError } from '../errors/entity-not-found.error';
 import { EntityAlreadyExistsError } from '../errors/entity-already-exists.error';
 import { Response } from 'express';
+import { UnauthorizedError } from '../errors/unauthorized.error';
 
-@Catch(EntityNotFoundError, EntityAlreadyExistsError)
+const customErrors = [
+  EntityNotFoundError,
+  EntityAlreadyExistsError,
+  UnauthorizedError,
+];
+
+@Catch(...customErrors)
 export class DomainErrorFilter implements ExceptionFilter {
   catch(error: Error, host: ArgumentsHost) {
     const httpException = this.toHttpException(error);
@@ -27,6 +35,9 @@ export class DomainErrorFilter implements ExceptionFilter {
     }
     if (error instanceof EntityAlreadyExistsError) {
       return new ConflictException(error.message);
+    }
+    if (error instanceof UnauthorizedError) {
+      return new UnauthorizedException(error.message);
     }
     throw error;
   }
