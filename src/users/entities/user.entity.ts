@@ -6,7 +6,7 @@ export class User implements Prisma.UserUncheckedCreateInput {
   email!: string;
   name!: string;
 
-  @Exclude()
+  @Exclude({ toPlainOnly: true })
   password!: string;
 
   constructor(partial: Partial<User>) {
