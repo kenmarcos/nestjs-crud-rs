@@ -11,7 +11,6 @@ import { validateEnv } from './env/env';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
       validate: validateEnv,
     }),
     PrismaModule,
