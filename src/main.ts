@@ -1,14 +1,31 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 import { DomainErrorFilter } from './filters/domain-error.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { EnvService } from './env/env.service';
 
 async function bootstrap() {
+  const logger = new Logger('Bootstrap');
+
+  try {
+    await startServer();
+  } catch (error) {
+    logger.error('❌ Server is not running.', (error as Error).message);
+    process.exit(1);
+  }
+}
+
+async function startServer() {
+  const logger = new Logger('Bootstrap');
+
   const app = await NestFactory.create(AppModule);
 
-  const configService = app.get(EnvService);
+  const envService = app.get(EnvService);
 
   app.setGlobalPrefix('api');
 
@@ -39,7 +56,9 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, documentFactory, { useGlobalPrefix: true });
 
-  const port = configService.get('PORT');
+  const port = envService.get('PORT');
   await app.listen(port);
+  logger.log(`🚀 HTTP Server Running on port ${port}!`);
 }
-bootstrap();
+
+void bootstrap();

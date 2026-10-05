@@ -31,6 +31,7 @@ export function validateEnv(config: Record<string, unknown>): Env {
     const messages = errors.flatMap((error) =>
       Object.values(error.constraints ?? {}).map((message) => `  - ${message}`),
     );
+
     throw new Error(`Invalid environment variables:\n${messages.join('\n')}`);
   }
 
